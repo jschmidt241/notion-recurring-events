@@ -31,3 +31,15 @@ async function addItem(text) {
 }
 
 addItem("Yurts in Big Sur, California")
+addItem("Test")
+let i = 0
+while (i < 3) {
+  addItem("Test number " + i)
+  i++
+}
+
+(async () => {
+  const databaseId2 = process.env.NOTION_DATABASE_ID_2;
+  const response = await notion.databases.retrieve({ database_id: databaseId2 });
+  console.log(response);
+})();
