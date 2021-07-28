@@ -1,52 +1,8 @@
 import { Client } from "@notionhq/client"
-
 const notion = new Client({ auth: process.env.NOTION_KEY })
 
 const databaseId = process.env.NOTION_DATABASE_ID
-const databaseId2 = process.env.NOTION_DATABASE_ID_2;
-
-async function addItem(text) {
-  try {
-    await notion.request({
-      path: "pages",
-      method: "POST",
-      body: {
-        parent: { database_id: databaseId },
-        properties: {
-          title: { 
-            title:[
-              {
-                "text": {
-                  "content": text
-                }
-              }
-            ]
-          }
-        }
-      },
-    })
-    console.log("Success! Entry added.")
-  } catch (error) {
-    console.error(error.body)
-  }
-}
-
-/**
-addItem("Test")
-let i = 0
-while (i < 3) {
-  addItem("Test number " + i)
-  i++
-}
-*/
-/**
-(async () => {
-  const databaseId2 = process.env.NOTION_DATABASE_ID_2;
-  const response = await notion.databases.query({ database_id: databaseId2 });
-  console.log(response);
-  
-})();
-*/
+const databaseId2 = process.env.NOTION_DATABASE_ID_2
 
 const getDatabase = async () => {
   const parameter = {
@@ -69,12 +25,6 @@ const getDatabase = async () => {
   return data;
 }
 
-const postDatabase = async () => {
-  const parameter = {
-    path: `databases/${databaseId}/request`
-  }
-}
-
 (async () => {
   const notionData = await getDatabase()
   for (let i = 0; i < notionData.length; i++) {
@@ -93,9 +43,45 @@ const postDatabase = async () => {
       var currentDate = date.getTime()
       while (dates[dates.length - 1].getTime() <= endDate.getTime() - (freq * 86400000)){
         dates.push(new Date(dates[dates.length - 1].getTime() + (freq * 86400000)))
+
+        const response = await notion.pages.create({
+          parent: {
+            database_id: databaseId,
+          },
+          properties: {
+            'Name': {
+              type: 'title',
+              title: [
+                {
+                  type: 'text',
+                  text: {
+                    content: notionData[i].title
+                  },
+                },
+              ],
+            },
+            'Date': {
+              type: 'date',
+              date: {
+                start: dates[dates.length - 1].toISOString().substr(0,10),
+              },
+            },
+            'Tags': {
+              type: 'multi_select',
+              multi_select: [
+                {
+                  'name': notionData[i].tags,
+                },
+              ],
+            },
+            'Status': {
+              type: 'checkbox',
+              checkbox: false,
+            },
+          }
+        })
       }
       console.log(dates)
-      
     }
   }
 })()

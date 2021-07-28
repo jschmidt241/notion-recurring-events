@@ -1,9 +1,12 @@
 {
-    "name": "notion-example",
+    "name": "notion-recurring-events",
     "type": "module",
     "version": "1.0.0",
     "description": "",
     "main": "index.js",
+    "scripts": {
+        "start": "node index"
+    },
     "dependencies": {
         "@notionhq/client": "^0.1.9"
     }
