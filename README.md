@@ -10,6 +10,5 @@ KNOWN ISSUES/MISSING FUNCTIONALITY:
 -Only repetition by every number of days is supported (i.e. every seven days works, every wednesday and thursday doesn't)
 -Time isn't supported
 -Crashes when user input isn't formatted correctly
--Sometimes first date doesn't appear
 -No control over color of the tag
 -No way to carry over text into the page's body
