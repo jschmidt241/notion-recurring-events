@@ -39,6 +39,44 @@ const getDatabase = async () => {
         parseInt(notionData[i].endDate.substr(8,2)))
 
       const dates = [date]
+
+      const response = await notion.pages.create({
+        parent: {
+          database_id: databaseId,
+        },
+        properties: {
+          'Name': {
+            type: 'title',
+            title: [
+              {
+                type: 'text',
+                text: {
+                  content: notionData[i].title
+                },
+              },
+            ],
+          },
+          'Date': {
+            type: 'date',
+            date: {
+              start: date.toISOString().substr(0,10),
+            },
+          },
+          'Tags': {
+            type: 'multi_select',
+            multi_select: [
+              {
+                'name': notionData[i].tags,
+              },
+            ],
+          },
+          'Status': {
+            type: 'checkbox',
+            checkbox: false,
+          },
+        }
+      })
+
       const freq = notionData[i].frequency
       var currentDate = date.getTime()
       while (dates[dates.length - 1].getTime() <= endDate.getTime() - (freq * 86400000)){
